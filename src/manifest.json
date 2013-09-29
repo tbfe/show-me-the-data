@@ -1,20 +1,21 @@
 {
-"update_url": "https://clients2.google.com/service/update2/crx",
-
-	"name": "Show Me The DATA",
-	"version": "13.7.10",
-	"description": "快速获取模版变量",
-	"permissions": ["http://*.fe.baidu.com/", "tabs"],
-	"page_action": {
-		"default_icon": "icon_0.png",
-		"default_title": "点击显示模版变量"
-	},
-	"background": {
-		"scripts": ["background.js"]
-	},
-	"icons": {
-		"128": "icon_128.png",
-		"48": "icon_48.png"
-	},
-	"manifest_version": 2
+    "name": "Show Me The DATA",
+    "version": "13.7.10",
+    "description": "快速获取模版变量",
+    "permissions": ["http://*.baidu.com/", "tabs"],
+    "page_action": {
+        "default_icon": "image/icon_frame_0.png",
+        "default_title": "点击显示模版变量"
+    },
+    "background": {
+        "scripts": ["lib/uri.js","js/background.js"]
+    },
+    "icons": {
+        "128": "image/icon_128.png",
+        "48": "image/icon_48.png"
+    },
+    "web_accessible_resources": [
+        "page/view.html"
+    ],
+    "manifest_version": 2
 }

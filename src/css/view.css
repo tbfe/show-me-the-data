@@ -1,0 +1,21 @@
+html {height: 100%;}
+body {
+    margin: 0;
+    background: #fff;
+    height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+.nav {
+    height: 32px;
+}
+.code {
+
+      -webkit-flex: 1;
+      flex: 1;
+}
+pre[class*="language-"] {
+    margin: 0;
+}

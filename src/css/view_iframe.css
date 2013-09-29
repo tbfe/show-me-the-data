@@ -1,0 +1,9 @@
+.SMTD-view {
+    position: fixed;
+    top: 100%;
+    transition: top .5s linear;
+    z-index: 2147483647;
+}
+body.SMTD {
+	overflow: hidden;
+}
