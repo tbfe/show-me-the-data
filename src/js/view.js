@@ -24,7 +24,7 @@ Prism.hooks.add('before-insert', function(env) {
     env.highlightedCode = ''; //阻止prism默认innerHTML大量dom
 });
 Prism.hooks.add('after-highlight', function(env) {
-    var timeout, i = 0;
+    var timeout, i = 0, t = Date.now();
     function clearTextNode(startNode) {
         if (!startNode) return;
         var nextNode = startNode.nextSibling;
@@ -39,7 +39,6 @@ Prism.hooks.add('after-highlight', function(env) {
             var html = (i?'\n':'') + env.highlightedCodeArray[i] + env.codeArray.slice(i+1).join('');
             var lastElement = $(env.element.lastElementChild);
             clearTextNode(lastElement[0]);
-
             $(env.element).append(html);
             if (i < env.highlightedCodeArray.length - 1) {
                 i++;
@@ -47,14 +46,20 @@ Prism.hooks.add('after-highlight', function(env) {
             }
         }, 50);
     }
-    $(window).on('scroll mousemove keydown', function() {
+    function lazyRenderCode() {
         if (i < env.highlightedCodeArray.length - 1) {
             if (timeout) {
                 window.clearTimeout(timeout);
             }
             appendCode();
         }
-    });
+        else {
+            $(window).off('mousemove.'+t+' keydown.'+t, lazyRenderCode);
+            $('#code-wrapper').off('scroll.'+t, lazyRenderCode);
+        }
+    }
+    $(window).on('mousemove.'+t+' keydown.'+t, lazyRenderCode);
+    $('#code-wrapper').on('scroll.'+t, lazyRenderCode);
     appendCode();
 });
 
