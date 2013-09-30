@@ -39,8 +39,7 @@ if (View === undefined) {
         show: function() {
             var self = this;
             window.setTimeout(function(){
-                            document.body.className = document.body.className + " SMTD";
-
+                document.body.className = document.body.className + " SMTD";
                 self.viewIframe.style.top = 0;
             },0);
             self.statu = VIEW_STATU_SHOW;
