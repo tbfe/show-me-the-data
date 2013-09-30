@@ -15,12 +15,11 @@
 
 })(Zepto);
 
-var frameUrl = new Uri(location.href);
-var dataUrl = decodeURIComponent(frameUrl.getQueryParamValue('url'));
+var CODE_SPLIT_REG = /((.*\n){50}|[\s\S]+$)/g; //按50行一个代码块分割代码
 
 Prism.hooks.add('before-insert', function(env) {
-    env.highlightedCodeArray = env.highlightedCode.match(/((.*\n){40}|[\s\S]+$)/g);
-    env.codeArray = env.code.match(/((.*\n){40}|[\s\S]+$)/g);
+    env.highlightedCodeArray = env.highlightedCode.match(CODE_SPLIT_REG);
+    env.codeArray = env.code.match(CODE_SPLIT_REG);
     env.highlightedCode = ''; //阻止prism默认innerHTML大量dom
 });
 Prism.hooks.add('after-highlight', function(env) {
@@ -37,8 +36,7 @@ Prism.hooks.add('after-highlight', function(env) {
     function appendCode() {
         timeout = window.setTimeout(function(){
             var html = (i?'\n':'') + env.highlightedCodeArray[i] + env.codeArray.slice(i+1).join('');
-            var lastElement = $(env.element.lastElementChild);
-            clearTextNode(lastElement[0]);
+            clearTextNode(env.element.lastElementChild);
             $(env.element).append(html);
             if (i < env.highlightedCodeArray.length - 1) {
                 i++;
@@ -62,6 +60,9 @@ Prism.hooks.add('after-highlight', function(env) {
     $('#code-wrapper').on('scroll.'+t, lazyRenderCode);
     appendCode();
 });
+
+var frameUrl = new Uri(location.href);
+var dataUrl = decodeURIComponent(frameUrl.getQueryParamValue('url'));
 
 $.get(dataUrl,function(data){
     $('#code').html($.escapeHTML(data));
