@@ -1,6 +1,7 @@
 .SMTD-view {
     position: fixed;
     top: 100%;
+    left: 0;
     transition: top .2s linear;
     z-index: 2147483647;
 }

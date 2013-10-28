@@ -62,9 +62,13 @@ Prism.hooks.add('after-highlight', function(env) {
 });
 
 var frameUrl = new Uri(location.href);
-var dataUrl = decodeURIComponent(frameUrl.getQueryParamValue('url'));
+var originUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url')));
 
-$.get(dataUrl,function(data){
-    $('#code').html($.escapeHTML(data));
-    Prism.highlightAll();
+getKey(function(key) {
+    originUrl.replaceQueryParam(PARAM_KEY, key)
+    var dataUrl = originUrl.toString();
+    $.get(dataUrl,function(data){
+        $('#code').html($.escapeHTML(data));
+        Prism.highlightAll();
+    });
 });
