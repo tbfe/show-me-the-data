@@ -13,7 +13,7 @@
             .replace(/&quot;/g, "\"");
     };
 
-})(Zepto);
+})($);
 
 var CODE_SPLIT_REG = /((.*\n){50}|[\s\S]+$)/g; //按50行一个代码块分割代码
 
@@ -63,6 +63,9 @@ Prism.hooks.add('after-highlight', function(env) {
 
 var frameUrl = new Uri(location.href);
 var originUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url')));
+
+$('.j-input-url').val(originUrl.toString());
+$('.nav').button();
 
 getKey(function(key) {
     originUrl.replaceQueryParam(PARAM_KEY, key)

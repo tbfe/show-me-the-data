@@ -3,18 +3,36 @@ body {
     margin: 0;
     background: #fff;
     height: 100%;
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-direction: column;
     flex-direction: column;
 }
 .nav {
-    height: 32px;
+    padding: 4px;
+    display: flex;
+}
+.address-control-group {
+    flex: 1;
+    margin: 0 6px;
+}
+.address-control-group .input-group {
+    margin-bottom: 0;
+}
+.address-control-group .input-group-btn .btn {
+    margin-left: -1px;
+}
+.address-control-group .input-group-btn .btn+.btn{
+    margin-left: -5px;
+}
+.nav .btn-group-icons .btn
+{
+    font-size: 14px;
+    padding-bottom: 2px;
 }
 .code {
-
-      -webkit-flex: 1;
-      flex: 1;
+    flex: 1;
+}
+pre {
+    font-size: 1em;
 }
 pre[class*="language-"] {
     margin: 0;
