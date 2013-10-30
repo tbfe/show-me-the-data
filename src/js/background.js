@@ -20,8 +20,17 @@ function showDataPage(tab) {
     _timestamp = Date.now();
 }
 
-function showDataPageInNewTab(key, tab) {
-    var url = new Uri(tab.url);
+function showDataPageInNewTab(key, mix) {
+    var url;
+    if (mix === undefined) return;
+    if (typeof mix === 'string') {
+        url = mix;
+    }
+    else {
+        //传入的是tab
+        url = mix.url;
+    }
+    var url = new Uri(url);
     url.replaceQueryParam(PARAM_KEY, key);
     window.open(url.toString());
 }
@@ -31,6 +40,21 @@ function showDataPageIframe(tab) {
         chrome.tabs.executeScript(null, {code: "var view = new View('"+ tab.url +"');view.toggle();"});
     });
 }
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    switch (request.code) {
+        case 'close':
+            chrome.tabs.executeScript(null, {code: "(new View()).hide()"});
+            break;
+        case 'newtab':
+            getKey(function(key) {
+                showDataPageInNewTab(key, request.data.url);
+            });
+            break;
+        default:
+            console.log('unrecognized message recieved: ', request);
+    }
+});
 
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
 chrome.pageAction.onClicked.addListener(showDataPage);

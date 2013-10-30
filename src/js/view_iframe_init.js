@@ -6,6 +6,7 @@ if (View === undefined) {
         VIEW_STATU_HIDE = 0;
     var VIEW_IFRAME_URL = chrome.extension.getURL("page/view.html");
 
+    //iframe管理类，单例
     View = function(url) {
         if (typeof View.instance === 'object') {
             return View.instance;
@@ -64,5 +65,17 @@ if (View === undefined) {
             }
         }
     };
+
+    //message转发
+    //content script收到iframe发送的消息，简单过滤后转发给background.html
+    function handleMessage(e) {
+        if (e.data) { 
+            chrome.runtime.sendMessage(e.data);
+        }
+        else {
+            console.log('unrecognized message recieved: ', e);
+        }
+    }
+    window.addEventListener("message", handleMessage, false);
 
 }

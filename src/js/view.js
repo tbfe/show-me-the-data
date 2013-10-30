@@ -1,3 +1,40 @@
+var frameUrl = new Uri(location.href);
+var originUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url')));
+
+
+(function initNav() {
+    var inputUrl = $('.j-input-url'),
+        btnGo = $('.j-go'),
+        btnClose = $('.j-close-iframe'),
+        btnNewWindow = $('.j-new-window');
+    inputUrl.val(originUrl.toString());
+    inputUrl.on('input', function(){
+        btnGo.data('original-title', '前往');
+        btnGo.find('.glyphicon').removeClass('glyphicon-refresh').addClass('glyphicon-play');
+    });
+    btnGo.click(function(){
+        btnGo.data('original-title', '刷新');
+        btnGo.find('.glyphicon').addClass('glyphicon-refresh').removeClass('glyphicon-play');
+    });
+    $('.nav').button();
+    $('.nav .btn').tooltip({
+        container: 'body',
+        placement: 'bottom'
+    });
+
+    $('.j-close-iframe').click(function(){
+        window.parent.postMessage({data:'1',code:'close'},'*');
+    })
+    $('.j-new-window').click(function(){
+        window.parent.postMessage({
+            data:{
+                url: inputUrl.val()
+            },
+            code:'newtab'
+        },'*');
+    })
+})();
+
 (function($) {
 
     $.escapeHTML = function(s) {
@@ -60,12 +97,6 @@ Prism.hooks.add('after-highlight', function(env) {
     $('#code-wrapper').on('scroll.'+t, lazyRenderCode);
     appendCode();
 });
-
-var frameUrl = new Uri(location.href);
-var originUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url')));
-
-$('.j-input-url').val(originUrl.toString());
-$('.nav').button();
 
 getKey(function(key) {
     originUrl.replaceQueryParam(PARAM_KEY, key)
