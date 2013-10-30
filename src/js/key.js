@@ -1,5 +1,5 @@
 var KEY_URL = 'http://liye04.fe.baidu.com/key.php',
-	PARAM_KEY = '__qa';
+    PARAM_KEY = '__qa';
 
 function _getKeyFromCache() {
     try {
