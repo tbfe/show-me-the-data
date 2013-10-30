@@ -1,20 +1,65 @@
+requirejs.config({
+    paths: {
+       prism: "/plugin/dependence/prism",
+    },
+    shim: {
+        'prism': {
+            "exports": "Prism"
+        }
+    }
+});
+
 var frameUrl = new Uri(location.href);
-var originUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url')));
+var initUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url'))),
 
+codeManager = {
+    _codeHandler: undefined,
+    renderCode: function(code) {
+        getKey(function(key) {
+            this._codeHandler && this._codeHandler.renderCode(code);
+        });
+    },
+    initCodeHandler: function(language) {
+        var self = this;
+        language = language || 'php';
+        require(['/plugin/'+language+'.js'], function(codeHandler){
+            self._codeHandler && self._codeHandler.destroy();
+            self._codeHandler = new codeHandler('.j-code-wrapper');
+        });
+    },
+    fetchCode: function(url) {
+        var self = this;
+        url = new Uri(url);
+        getKey(function(key) {
+            url.replaceQueryParam(PARAM_KEY, key)
+            var dataUrl = url.toString();
+            $.get(dataUrl, function(data){
+                self._codeHandler.renderCode(data);
+            });
+        });
+    }
+};
 
+//首次代码加载
+codeManager.initCodeHandler();
+codeManager.fetchCode(initUrl.toString());
+
+//初始化地址栏
 (function initNav() {
     var inputUrl = $('.j-input-url'),
         btnGo = $('.j-go'),
         btnClose = $('.j-close-iframe'),
         btnNewWindow = $('.j-new-window');
-    inputUrl.val(originUrl.toString());
+    inputUrl.val(initUrl.toString());
     inputUrl.on('input', function(){
-        btnGo.data('original-title', '前往');
+        btnGo.attr('data-original-title', '前往');
         btnGo.find('.glyphicon').removeClass('glyphicon-refresh').addClass('glyphicon-play');
     });
-    btnGo.click(function(){
-        btnGo.data('original-title', '刷新');
+    $('.j-nav-form').on('submit', function(e){
+        e.preventDefault();
+        btnGo.attr('data-original-title', '刷新');
         btnGo.find('.glyphicon').addClass('glyphicon-refresh').removeClass('glyphicon-play');
+        codeManager.fetchCode(inputUrl.val());
     });
     $('.nav').button();
     $('.nav .btn').tooltip({
@@ -35,74 +80,11 @@ var originUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url')));
     })
 })();
 
-(function($) {
 
-    $.escapeHTML = function(s) {
-        return s.replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-    };
-    $.unescapeHTML = function(s){
-        return s.replace(/&amp;/g,'&')
-            .replace(/&lt;/g,'<')
-            .replace(/&gt;/g,'>')
-            .replace(/&nbsp;/g,' ')
-            .replace(/&quot;/g, "\"");
-    };
-
-})($);
-
-var CODE_SPLIT_REG = /((.*\n){50}|[\s\S]+$)/g; //按50行一个代码块分割代码
-
-Prism.hooks.add('before-insert', function(env) {
-    env.highlightedCodeArray = env.highlightedCode.match(CODE_SPLIT_REG);
-    env.codeArray = env.code.match(CODE_SPLIT_REG);
-    env.highlightedCode = ''; //阻止prism默认innerHTML大量dom
-});
-Prism.hooks.add('after-highlight', function(env) {
-    var timeout, i = 0, t = Date.now();
-    function clearTextNode(startNode) {
-        if (!startNode) return;
-        var nextNode = startNode.nextSibling;
-        if (nextNode) {
-            clearTextNode(nextNode);
-            nextNode.remove();
-            nextNode = null;
-        }
-    }
-    function appendCode() {
-        timeout = window.setTimeout(function(){
-            var html = (i?'\n':'') + env.highlightedCodeArray[i] + env.codeArray.slice(i+1).join('');
-            clearTextNode(env.element.lastElementChild);
-            $(env.element).append(html);
-            if (i < env.highlightedCodeArray.length - 1) {
-                i++;
-                appendCode();
-            }
-        }, 50);
-    }
-    function lazyRenderCode() {
-        if (i < env.highlightedCodeArray.length - 1) {
-            if (timeout) {
-                window.clearTimeout(timeout);
-            }
-            appendCode();
-        }
-        else {
-            $(window).off('mousemove.'+t+' keydown.'+t, lazyRenderCode);
-            $('#code-wrapper').off('scroll.'+t, lazyRenderCode);
-        }
-    }
-    $(window).on('mousemove.'+t+' keydown.'+t, lazyRenderCode);
-    $('#code-wrapper').on('scroll.'+t, lazyRenderCode);
-    appendCode();
-});
-
-getKey(function(key) {
-    originUrl.replaceQueryParam(PARAM_KEY, key)
-    var dataUrl = originUrl.toString();
-    $.get(dataUrl,function(data){
-        $('#code').html($.escapeHTML(data));
-        Prism.highlightAll();
-    });
-});
+function loadCss(url) {
+    var link = document.createElement("link");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = url;
+    document.getElementsByTagName("head")[0].appendChild(link);
+}

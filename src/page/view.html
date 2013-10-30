@@ -2,10 +2,11 @@
 <html>
     <head>
         <link rel="stylesheet" href="/lib/bootstrap.min.css">
-        <link rel="stylesheet" href="/lib/prism.css">
+        <link rel="stylesheet" href="/plugin/dependence/prism.css2">
         <link rel="stylesheet" href="/css/view.css">
     </head>
     <body>
+        <form action="#" class="j-nav-form">
         <div class="nav">
             <div class="btn-group btn-group-sm" data-toggle="buttons">
                 <label class="btn btn-default">
@@ -19,7 +20,7 @@
                 <div class="input-group form-group input-group-sm">
                     <input type="text" class="form-control j-input-url">
                     <span class="input-group-btn btn-group-icons">
-                        <button data-toggle="tooltip" title="刷新" class="btn btn-default j-go" type="button"><span class="glyphicon glyphicon-refresh"></span></button>
+                        <button data-toggle="tooltip" title="刷新" class="btn btn-default j-go" type="submit"><span class="glyphicon glyphicon-refresh"></span></button>
                         <button data-toggle="tooltip" title="新窗口打开" class="btn btn-default j-new-window" type="button"><span class="glyphicon glyphicon-new-window"></span></button>
                     </span>
                 </div>
@@ -28,11 +29,15 @@
                 <button data-toggle="tooltip" title="收起" type="button" class="btn btn-default j-close-iframe"><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         </div>
-        <pre class="code" id="code-wrapper"><code class="language-php" id="code"></code></pre>
+        </form>
+        <div class="code j-code-wrapper">
+            
+        </div>
+        <script src="/lib/require.js"></script>
         <script src="/lib/jquery.min.js"></script>
         <script src="/lib/bootstrap.min.js"></script>
         <script src="/lib/uri.js"></script>
-        <script src="/lib/prism.js"></script>
+        <!--<script src="/lib/prism.js"></script>-->
         <script src="/js/key.js"></script>
         <script src="/js/view.js"></script>
     </body>
