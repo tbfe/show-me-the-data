@@ -19,6 +19,7 @@ define(['prism'], function (Prism) {
     var CODE_SPLIT_REG = /((.*\n){50}|[\s\S]+$)/g; //按50行一个代码块分割代码
 
     var phpCodeHandler = function(container) {
+        var self = this;
         this.container = $(container);
         this.container.html('<pre id="code-wrapper"><code class="language-php" id="code"></code></pre>');
         Prism.hooks.add('before-insert', function(env) {
@@ -26,8 +27,11 @@ define(['prism'], function (Prism) {
             env.codeArray = env.code.match(CODE_SPLIT_REG);
             env.highlightedCode = ''; //阻止prism默认innerHTML大量dom
         });
+        this.renderStartTime = 0;
         Prism.hooks.add('after-highlight', function(env) {
-            var timeout, i = 0, t = Date.now();
+            var timeout, i = 0,
+                renderStartTime = Date.now();//当前闭包创建的时间
+            self.renderStartTime = renderStartTime;
             function clearTextNode(startNode) {
                 if (!startNode) return;
                 var nextNode = startNode.nextSibling;
@@ -39,6 +43,7 @@ define(['prism'], function (Prism) {
             }
             function appendCode() {
                 timeout = window.setTimeout(function(){
+                    if (renderStartTime != self.renderStartTime) return; //如果当前闭包已经过时，不再继续迭代
                     var html = (i?'\n':'') + env.highlightedCodeArray[i] + env.codeArray.slice(i+1).join('');
                     clearTextNode(env.element.lastElementChild);
                     $(env.element).append(html);
@@ -56,12 +61,12 @@ define(['prism'], function (Prism) {
                     appendCode();
                 }
                 else {
-                    $(window).off('mousemove.'+t+' keydown.'+t, lazyRenderCode);
-                    $('#code-wrapper').off('scroll.'+t, lazyRenderCode);
+                    $(window).off('mousemove.'+renderStartTime+' keydown.'+renderStartTime, lazyRenderCode);
+                    $('#code-wrapper').off('scroll.'+renderStartTime, lazyRenderCode);
                 }
             }
-            $(window).on('mousemove.'+t+' keydown.'+t, lazyRenderCode);
-            $('#code-wrapper').on('scroll.'+t, lazyRenderCode);
+            $(window).on('mousemove.'+renderStartTime+' keydown.'+renderStartTime, lazyRenderCode);
+            $('#code-wrapper').on('scroll.'+renderStartTime, lazyRenderCode);
             appendCode();
         });
     };
@@ -71,7 +76,7 @@ define(['prism'], function (Prism) {
             Prism.highlightAll();
         },
         destroy: function() {
-
+            this.container.html('');
         }
     }
     return phpCodeHandler;

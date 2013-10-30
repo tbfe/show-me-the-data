@@ -13,6 +13,7 @@ function showDataPage(tab) {
     };
     if (_timestamp > Date.now() - 500) {
         callback = function(key) {
+            chrome.tabs.executeScript(null, {code: "(new View()).hide()"});
             showDataPageInNewTab(key, tab);
         };
     }

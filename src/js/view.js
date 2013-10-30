@@ -30,11 +30,13 @@ codeManager = {
     fetchCode: function(url) {
         var self = this;
         url = new Uri(url);
+        loading();
         getKey(function(key) {
             url.replaceQueryParam(PARAM_KEY, key)
             var dataUrl = url.toString();
             $.get(dataUrl, function(data){
-                self._codeHandler.renderCode(data);
+                self._codeHandler && self._codeHandler.renderCode(data);
+                unloading();
             });
         });
     }
@@ -67,16 +69,17 @@ codeManager.fetchCode(initUrl.toString());
         placement: 'bottom'
     });
 
-    $('.j-close-iframe').click(function(){
+    btnClose.click(function(){
         window.parent.postMessage({data:'1',code:'close'},'*');
     })
-    $('.j-new-window').click(function(){
+    btnNewWindow.click(function(){
         window.parent.postMessage({
             data:{
                 url: inputUrl.val()
             },
             code:'newtab'
         },'*');
+        btnNewWindow.attr('data-original-title', '下次试试双击 { }');
     })
 })();
 
@@ -87,4 +90,14 @@ function loadCss(url) {
     link.rel = "stylesheet";
     link.href = url;
     document.getElementsByTagName("head")[0].appendChild(link);
+}
+
+function loading() {
+    $('.loading').show();
+    //锦上添花的功能，直接列举可能的情况，没有解耦
+    $('.j-code-wrapper #code ').addClass('loading-blur');
+}
+function unloading() {
+    $('.loading').hide();
+    $('.j-code-wrapper #code ').removeClass('loading-blur');
 }

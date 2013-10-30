@@ -9,6 +9,10 @@ body {
 .nav {
     padding: 4px;
     display: flex;
+    background-color: #f3f2ee;
+}
+.nav .input-group-sm .form-control {
+    font-size: 14px;
 }
 .address-control-group {
     flex: 1;
@@ -31,6 +35,7 @@ body {
 .code {
     flex: 1;
     overflow: scroll;
+    background: #272822;
 }
 /* override prism.css */
 .code pre {
@@ -42,4 +47,18 @@ body {
 }
 .code pre[class*="language-"] {
     margin: 0;
+}
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 110px;
+    height: 110px;
+    margin: -55px 0 0 -55px;
+    border-radius: 4px;
+    background: #474747 url(/image/loading.gif) center center no-repeat;
+}
+.loading-blur {
+    -webkit-filter: blur(3px);
+    filter: blur(3px);
 }
