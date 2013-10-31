@@ -37,17 +37,6 @@ body {
     overflow: scroll;
     background: #272822;
 }
-/* override prism.css */
-.code pre {
-    font-size: 1em;
-    border: 0;
-    border-radius: 0;
-    display: inline-block;
-    vertical-align: bottom;
-}
-.code pre[class*="language-"] {
-    margin: 0;
-}
 .loading {
     position: fixed;
     top: 50%;
@@ -61,4 +50,35 @@ body {
 .loading-blur {
     -webkit-filter: blur(3px);
     filter: blur(3px);
+}
+/* style for php */
+.code pre {
+    font-size: 1em;
+    border: 0;
+    border-radius: 0;
+    display: inline-block;
+    vertical-align: bottom;
+}
+.code pre[class*="language-"] {
+    margin: 0;
+}
+.word-wrap #code{
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+.word-wrap-control-wrapper {
+    position: fixed;
+    top: 44px; /* magic number*/
+    right: 22px;
+    background: rgba(0,0,0,.6);
+    border-radius: 3px;
+    color: #ccc;
+    padding-left: 20px; /* magic number */
+    opacity: .4;
+}
+.word-wrap-control-wrapper:hover {
+    opacity: 1;
+}
+.word-wrap-control-wrapper label{
+    padding: 6px;
 }
