@@ -1,6 +1,7 @@
 requirejs.config({
     paths: {
        prism: "/plugin/dependence/prism",
+       jsoneditor: "/plugin/dependence/jsoneditor"
     },
     shim: {
         'prism': {
@@ -10,21 +11,22 @@ requirejs.config({
 });
 
 var frameUrl = new Uri(location.href);
-var initUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url'))),
-
-codeManager = {
+var currentUrl = new Uri(decodeURIComponent(frameUrl.getQueryParamValue('url'))),
+    currentLanguage = getLanguage();
+var codeManager = {
     _codeHandler: undefined,
     renderCode: function(code) {
         getKey(function(key) {
             this._codeHandler && this._codeHandler.renderCode(code);
         });
     },
-    initCodeHandler: function(language) {
+    initCodeHandler: function(language, callback) {
         var self = this;
-        language = language || 'php';
         require(['/plugin/'+language+'.js'], function(codeHandler){
             self._codeHandler && self._codeHandler.destroy();
             self._codeHandler = new codeHandler('.j-code-wrapper');
+            $('.j-code-wrapper').attr('data-language', language);
+            callback && callback();
         });
     },
     fetchCode: function(url) {
@@ -32,7 +34,8 @@ codeManager = {
         url = new Uri(url);
         loading();
         getKey(function(key) {
-            url.replaceQueryParam(PARAM_KEY, key)
+            url.replaceQueryParam(PARAM_KEY, key);
+            url.replaceQueryParam(LANGUAGE_KEY, getLanguage());
             var dataUrl = url.toString();
             $.get(dataUrl, function(data){
                 self._codeHandler && self._codeHandler.renderCode(data);
@@ -43,16 +46,19 @@ codeManager = {
 };
 
 //首次代码加载
-codeManager.initCodeHandler();
-codeManager.fetchCode(initUrl.toString());
+codeManager.initCodeHandler(getLanguage(), function() {
+    codeManager.fetchCode(currentUrl.toString());
+});
 
 //初始化地址栏
 (function initNav() {
     var inputUrl = $('.j-input-url'),
         btnGo = $('.j-go'),
         btnClose = $('.j-close-iframe'),
-        btnNewWindow = $('.j-new-window');
-    inputUrl.val(initUrl.toString());
+        btnNewWindow = $('.j-new-window'),
+        radioLanguage = $('.j-radio-language input:radio');
+    //初始化地址栏
+    inputUrl.val(currentUrl.toString());
     inputUrl.on('input', function(){
         btnGo.attr('data-original-title', '前往');
         btnGo.find('.glyphicon').removeClass('glyphicon-refresh').addClass('glyphicon-play');
@@ -61,17 +67,37 @@ codeManager.fetchCode(initUrl.toString());
         e.preventDefault();
         btnGo.attr('data-original-title', '刷新');
         btnGo.find('.glyphicon').addClass('glyphicon-refresh').removeClass('glyphicon-play');
-        codeManager.fetchCode(inputUrl.val());
+        var url = inputUrl.val();
+        codeManager.fetchCode(url);
+        currentUrl = new Uri(url);
     });
     $('.nav').button();
     $('.nav .btn').tooltip({
         container: 'body',
         placement: 'bottom'
     });
-
-    btnClose.click(function(){
-        window.parent.postMessage({data:'1',code:'close'},'*');
+    //初始化language选择
+    radioLanguage.filter('[value="'+currentLanguage+'"]').click();
+    radioLanguage.change(function(e) {
+        var targetLanguage = $(this).attr('value');
+        if (targetLanguage === currentLanguage) return;
+        currentLanguage = targetLanguage;
+        setLanguage(targetLanguage);
+        codeManager.initCodeHandler(targetLanguage, function() {
+            codeManager.fetchCode(currentUrl.toString());
+        });
     })
+    //初始化关闭浮层
+    function closeIframe() {
+        window.parent.postMessage({data:'1',code:'close'},'*');
+    }
+    btnClose.click(closeIframe)
+    $(document).keyup(function(e) {
+        if (e.keyCode == 27) {
+            closeIframe();
+        }
+    });
+    //初始化新窗口打开
     btnNewWindow.click(function(){
         window.parent.postMessage({
             data:{
@@ -95,9 +121,10 @@ function loadCss(url) {
 function loading() {
     $('.loading').show();
     //锦上添花的功能，直接列举可能的情况，没有解耦
-    $('.j-code-wrapper #code ').addClass('loading-blur');
+    $('.loading-blur').removeClass('loading-blur');
+    $('.j-code-wrapper[data-language="php"] #code, .j-code-wrapper[data-language="json"] .jsoneditor').addClass('loading-blur');
 }
 function unloading() {
     $('.loading').hide();
-    $('.j-code-wrapper #code ').removeClass('loading-blur');
+    $('.loading-blur').removeClass('loading-blur');
 }

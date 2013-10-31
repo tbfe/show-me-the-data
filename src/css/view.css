@@ -8,8 +8,10 @@ body {
 }
 .nav {
     padding: 4px;
-    display: flex;
     background-color: #f3f2ee;
+}
+.nav-form-wrapper {
+    display: flex;
 }
 .nav .input-group-sm .form-control {
     font-size: 14px;
@@ -34,8 +36,6 @@ body {
 }
 .code {
     flex: 1;
-    overflow: scroll;
-    background: #272822;
 }
 .loading {
     position: fixed;
@@ -52,14 +52,19 @@ body {
     filter: blur(3px);
 }
 /* style for php */
-.code pre {
+.code[data-language=php] {
+    flex: 1;
+    overflow: scroll;
+    background: #272822;
+}
+.code[data-language=php] pre {
     font-size: 1em;
     border: 0;
     border-radius: 0;
     display: inline-block;
     vertical-align: bottom;
 }
-.code pre[class*="language-"] {
+.code[data-language=php] pre[class*="language-"] {
     margin: 0;
 }
 .word-wrap #code{
@@ -81,4 +86,21 @@ body {
 }
 .word-wrap-control-wrapper label{
     padding: 6px;
+}
+/* style for json */
+.code[data-language=json] {
+    display: flex;
+    flex-direction: column;
+}
+.code[data-language=json] .jsoneditor {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-width: 1px 0 0;
+}
+.code[data-language=json] .jsoneditor div.outer {
+    overflow: scroll;
+    flex: 1;
+    margin: 0;
+    padding: 0;
 }

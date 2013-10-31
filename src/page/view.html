@@ -5,14 +5,14 @@
         <link rel="stylesheet" href="/css/view.css">
     </head>
     <body>
-        <form action="#" class="j-nav-form">
         <div class="nav">
-            <div class="btn-group btn-group-sm" data-toggle="buttons">
+        <form action="#" class="nav-form-wrapper j-nav-form">
+            <div class="btn-group btn-group-sm j-radio-language" data-toggle="buttons">
                 <label class="btn btn-default">
-                    <input type="radio" name="options" id="option1">php
+                    <input type="radio" name="language" value="php">php
                 </label>
                 <label class="btn btn-default">
-                    <input type="radio" name="options" id="option2">json
+                    <input type="radio" name="language" value="json">json
                 </label>
             </div>
             <div class="address-control-group">
@@ -27,8 +27,8 @@
             <div class="btn-group btn-group-sm btn-group-icons">
                 <button data-toggle="tooltip" title="收起" type="button" class="btn btn-default j-close-iframe"><span class="glyphicon glyphicon-remove"></span></button>
             </div>
-        </div>
         </form>
+        </div>
         <div class="code j-code-wrapper">
             
         </div>

@@ -1,5 +1,6 @@
 var KEY_URL = 'http://liye04.fe.baidu.com/key.php',
     PARAM_KEY = '__qa';
+    LANGUAGE_KEY = '__type';
 
 function _getKeyFromCache() {
     try {
@@ -44,4 +45,18 @@ function getKey(callback) {
     else {
         _cacheKeyFromServer(callback); 
     }
+}
+
+function getLanguage() {
+    try {
+        language = localStorage.getItem('language');
+    }
+    catch (e) {}
+    return language || 'php';
+}
+function setLanguage(language) {
+    try {
+        localStorage.setItem('language', language);
+    }
+    catch (e) {}
 }

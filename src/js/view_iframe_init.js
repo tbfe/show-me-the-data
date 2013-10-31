@@ -78,4 +78,9 @@ if (View === undefined) {
     }
     window.addEventListener("message", handleMessage, false);
 
+    document.addEventListener('keyup', function(e) {
+        if (e.keyCode == 27) {
+            chrome.runtime.sendMessage({code: 'close'});
+        }
+    }, false);
 }
