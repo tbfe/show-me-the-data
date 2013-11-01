@@ -1,6 +1,6 @@
 {
     "name": "Show Me The DATA",
-    "version": "13.11.11",
+    "version": "13.11.1",
     "description": "快速获取模版变量",
     "permissions": ["http://*.baidu.com/", "tabs"],
     "page_action": {
