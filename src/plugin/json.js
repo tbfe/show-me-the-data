@@ -3,7 +3,8 @@ define(['jsoneditor'], function (jsoneditor) {
 
     var jsonCodeHandler = function(container) {
         // create the editor
-        this.editor = new jsoneditor.JSONEditor($(container)[0], {
+        this.container = $(container);
+        this.editor = new jsoneditor.JSONEditor(this.container[0], {
             mode: 'view'
         });
     };
@@ -12,7 +13,8 @@ define(['jsoneditor'], function (jsoneditor) {
             this.editor.set(JSON.parse(code));
         },
         destroy: function() {
-            this.editor.set({});
+            this.editor.clear();
+            this.container.empty();
         }
     };
     return jsonCodeHandler;

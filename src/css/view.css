@@ -54,8 +54,15 @@ body {
 /* style for php */
 .code[data-language=php] {
     flex: 1;
-    overflow: scroll;
+    display: flex;
+    flex-direction: column;
     background: #272822;
+}
+.code[data-language=php] .code-wrapper {
+    display: flex;
+    flex-direction: column;
+    line-height: inherit;
+    flex: 1;
 }
 .code[data-language=php] pre {
     font-size: 1em;
@@ -67,7 +74,7 @@ body {
 .code[data-language=php] pre[class*="language-"] {
     margin: 0;
 }
-.word-wrap #code{
+.code[data-language=php] .word-wrap code[class*="language-"]{
     white-space: pre-wrap;
     word-break: break-all;
 }

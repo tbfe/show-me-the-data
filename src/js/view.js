@@ -122,7 +122,7 @@ function loading() {
     $('.loading').show();
     //锦上添花的功能，直接列举可能的情况，没有解耦
     $('.loading-blur').removeClass('loading-blur');
-    $('.j-code-wrapper[data-language="php"] #code, .j-code-wrapper[data-language="json"] .jsoneditor').addClass('loading-blur');
+    $('.j-code-wrapper[data-language="php"] .j-code, .j-code-wrapper[data-language="json"] .jsoneditor').addClass('loading-blur');
 }
 function unloading() {
     $('.loading').hide();
