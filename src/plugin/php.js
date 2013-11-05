@@ -1,20 +1,11 @@
 define(['prism'], function (Prism) {
     loadCss('/plugin/dependence/prism.css');
 
-    (function($) {
-        $.escapeHTML = function(s) {
-            return s.replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-        };
-        $.unescapeHTML = function(s){
-            return s.replace(/&amp;/g,'&')
-                .replace(/&lt;/g,'<')
-                .replace(/&gt;/g,'>')
-                .replace(/&nbsp;/g,' ')
-                .replace(/&quot;/g, "\"");
-        };
-    })($);
+    function escapeForPrism(s) {
+        return s.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/\u00a0/g, ' ');
+    };
 
     function clearTextNode(startNode) {
         if (!startNode) return;
@@ -26,7 +17,7 @@ define(['prism'], function (Prism) {
         }
     }
 
-    var CODE_SPLIT_REG = /((.*\n){50}|[\s\S]+$)/g; //按50行一个代码块分割代码
+    var CODE_SPLIT_REG = /((.*[\n|\u000d]){50}|[\s\S]+$)/g; //按50行一个代码块分割代码
 
     var phpCodeHandler = function(container) {
         var self = this;
@@ -42,6 +33,7 @@ define(['prism'], function (Prism) {
     phpCodeHandler.prototype = {
         renderCode: function(code) {
             var self = this;
+            code = escapeForPrism(code);
             var highlightedCode = Prism.highlight(code, Prism.languages.php);
             var highlightedCodeArray = highlightedCode.match(CODE_SPLIT_REG);
             var codeArray = code.match(CODE_SPLIT_REG);
@@ -77,12 +69,11 @@ define(['prism'], function (Prism) {
             }
             function unbindEvent() {
                 $(window).off('mousemove.'+renderStartTime+' keydown.'+renderStartTime, lazyRenderCode);
-                $('#code-wrapper').off('scroll.'+renderStartTime, lazyRenderCode);
+                $('.j-code-wrapper').off('scroll.'+renderStartTime, lazyRenderCode);
             }
+            self.codeContainer[0].innerHTML = '';
             $(window).on('mousemove.'+renderStartTime+' keydown.'+renderStartTime, lazyRenderCode);
-            $('#code-wrapper').on('scroll.'+renderStartTime, lazyRenderCode);
-
-            self.codeContainer.html('');
+            $('.j-code-wrapper').on('scroll.'+renderStartTime, lazyRenderCode);
             appendCode();
         },
         destroy: function() {
