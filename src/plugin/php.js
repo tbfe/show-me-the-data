@@ -1,4 +1,4 @@
-define(['prism'], function (Prism) {
+define(['prism'], function(Prism) {
     loadCss('/plugin/dependence/prism.css');
 
     function escapeForPrism(s) {
@@ -41,13 +41,14 @@ define(['prism'], function (Prism) {
             var timeout, i = 0,
                 renderStartTime = Date.now();//当前闭包创建的时间
             self.renderStartTime = renderStartTime;
+
             function appendCode() {
-                timeout = window.setTimeout(function(){
+                timeout = window.setTimeout(function() {
                     if (renderStartTime != self.renderStartTime) {
                         unbindEvent();
                         return; //如果当前闭包已经过时，不再继续迭代
                     }
-                    var html = (i?'\n':'') + highlightedCodeArray[i] + codeArray.slice(i+1).join('');
+                    var html = (i ? '\n' : '') + highlightedCodeArray[i] + codeArray.slice(i + 1).join('');
                     clearTextNode(self.codeContainer[0].lastElementChild);
                     self.codeContainer.append(html);
                     if (i < highlightedCodeArray.length - 1) {
@@ -56,29 +57,33 @@ define(['prism'], function (Prism) {
                     }
                 }, 50);
             }
+
             function lazyRenderCode() {
                 if (i < highlightedCodeArray.length - 1) {
                     if (timeout) {
                         window.clearTimeout(timeout);
                     }
                     appendCode();
-                }
-                else {
+                } else {
                     unbindEvent();
                 }
             }
+
             function unbindEvent() {
-                $(window).off('mousemove.'+renderStartTime+' keydown.'+renderStartTime, lazyRenderCode);
-                $('.j-code-wrapper').off('scroll.'+renderStartTime, lazyRenderCode);
+                $(window).off('mousemove.' + renderStartTime + ' keydown.' + renderStartTime, lazyRenderCode);
+                $('.j-code-wrapper').off('scroll.' + renderStartTime, lazyRenderCode);
             }
-            self.codeContainer[0].innerHTML = '';
-            $(window).on('mousemove.'+renderStartTime+' keydown.'+renderStartTime, lazyRenderCode);
-            $('.j-code-wrapper').on('scroll.'+renderStartTime, lazyRenderCode);
+            self.clearCode();
+            $(window).on('mousemove.' + renderStartTime + ' keydown.' + renderStartTime, lazyRenderCode);
+            $('.j-code-wrapper').on('scroll.' + renderStartTime, lazyRenderCode);
             appendCode();
         },
         destroy: function() {
             this.renderStartTime = 0;
             this.container.empty();
+        },
+        clearCode: function() {
+            this.codeContainer[0].innerHTML = '';
         }
     }
     return phpCodeHandler;
