@@ -1,7 +1,8 @@
 requirejs.config({
     paths: {
-       prism: "/plugin/dependence/prism",
-       jsoneditor: "/plugin/dependence/jsoneditor"
+        prism: "/plugin/dependence/prism/prism",
+        ace: "/plugin/dependence/ace/ace",
+        jsoneditor: "/plugin/dependence/jsoneditor/jsoneditor"
     },
     shim: {
         'prism': {
@@ -22,7 +23,7 @@ var codeManager = {
     },
     initCodeHandler: function(language, callback) {
         var self = this;
-        require(['/plugin/'+language+'.js'], function(codeHandler){
+        require(['/plugin/' + language + '.js'], function(codeHandler) {
             self._codeHandler && self._codeHandler.destroy();
             self._codeHandler = new codeHandler('.j-code-wrapper');
             $('.j-code-wrapper').attr('data-language', language);
@@ -37,7 +38,7 @@ var codeManager = {
             url.replaceQueryParam(PARAM_KEY, key);
             url.replaceQueryParam(LANGUAGE_KEY, getLanguage());
             var dataUrl = url.toString();
-            $.get(dataUrl, function(data){
+            $.get(dataUrl, function(data) {
                 self._codeHandler && self._codeHandler.renderCode(data);
                 unloading();
             });
@@ -59,11 +60,11 @@ codeManager.initCodeHandler(getLanguage(), function() {
         radioLanguage = $('.j-radio-language input:radio');
     //初始化地址栏
     inputUrl.val(currentUrl.toString());
-    inputUrl.on('input', function(){
+    inputUrl.on('input', function() {
         btnGo.attr('data-original-title', '前往');
         btnGo.find('.glyphicon').removeClass('glyphicon-refresh').addClass('glyphicon-play');
     });
-    $('.j-nav-form').on('submit', function(e){
+    $('.j-nav-form').on('submit', function(e) {
         e.preventDefault();
         btnGo.attr('data-original-title', '刷新');
         btnGo.find('.glyphicon').addClass('glyphicon-refresh').removeClass('glyphicon-play');
@@ -77,7 +78,7 @@ codeManager.initCodeHandler(getLanguage(), function() {
         placement: 'bottom'
     });
     //初始化language选择
-    radioLanguage.filter('[value="'+currentLanguage+'"]').click();
+    radioLanguage.filter('[value="' + currentLanguage + '"]').click();
     radioLanguage.change(function(e) {
         var targetLanguage = $(this).attr('value');
         if (targetLanguage === currentLanguage) return;
@@ -89,7 +90,10 @@ codeManager.initCodeHandler(getLanguage(), function() {
     })
     //初始化关闭浮层
     function closeIframe() {
-        window.parent.postMessage({data:'1',code:'close'},'*');
+        window.parent.postMessage({
+            data: '1',
+            code: 'close'
+        }, '*');
     }
     btnClose.click(closeIframe)
     $(document).keyup(function(e) {
@@ -98,13 +102,13 @@ codeManager.initCodeHandler(getLanguage(), function() {
         }
     });
     //初始化新窗口打开
-    btnNewWindow.click(function(){
+    btnNewWindow.click(function() {
         window.parent.postMessage({
-            data:{
+            data: {
                 url: inputUrl.val()
             },
-            code:'newtab'
-        },'*');
+            code: 'newtab'
+        }, '*');
         btnNewWindow.attr('data-original-title', '下次试试双击 { }');
     })
 })();
@@ -124,6 +128,7 @@ function loading() {
     $('.loading-blur').removeClass('loading-blur');
     $('.j-code-wrapper[data-language="php"] .j-code, .j-code-wrapper[data-language="json"] .jsoneditor').addClass('loading-blur');
 }
+
 function unloading() {
     $('.loading').hide();
     $('.loading-blur').removeClass('loading-blur');

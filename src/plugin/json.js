@@ -1,11 +1,13 @@
-define(['jsoneditor'], function (jsoneditor) {
-    loadCss('/plugin/dependence/jsoneditor.css');
+define(['jsoneditor', 'ace'], function(jsoneditor, ace) {
+    loadCss('/plugin/dependence/jsoneditor/jsoneditor.css');
+    loadCss
 
     var jsonCodeHandler = function(container) {
         // create the editor
         this.container = $(container);
         this.editor = new jsoneditor.JSONEditor(this.container[0], {
-            mode: 'view'
+            mode: 'form',
+            modes: ['code', 'form']
         });
     };
     jsonCodeHandler.prototype = {
@@ -13,7 +15,6 @@ define(['jsoneditor'], function (jsoneditor) {
             this.editor.set(JSON.parse(code));
         },
         destroy: function() {
-            this.editor.clear();
             this.container.empty();
         }
     };

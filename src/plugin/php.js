@@ -1,5 +1,5 @@
 define(['prism'], function(Prism) {
-    loadCss('/plugin/dependence/prism.css');
+    loadCss('/plugin/dependence/prism/prism.css');
 
     function escapeForPrism(s) {
         return s.replace(/&/g, '&amp;')
@@ -22,7 +22,7 @@ define(['prism'], function(Prism) {
     var phpCodeHandler = function(container) {
         var self = this;
         this.container = $(container);
-        this.container.html('<div class="code-wrapper"><pre class="language-php"><code class="language-php j-code"></code></pre><div class="word-wrap-control-wrapper"><label class="checkbox-inline"><input type="checkbox" class="j-word-wrap-control"/>Word Wrap</label></div></div>');
+        this.container.html('<div class="code-wrapper"><pre class="language-php"><code class="language-php j-code"></code></pre><div class="control-wrapper word-wrap-control-wrapper"><label class="checkbox-inline"><input type="checkbox" class="j-word-wrap-control"/>Word Wrap</label></div></div>');
         this.codeContainer = this.container.find('.j-code');
         this.renderStartTime = 0;
 
@@ -39,7 +39,7 @@ define(['prism'], function(Prism) {
             var codeArray = code.match(CODE_SPLIT_REG);
 
             var timeout, i = 0,
-                renderStartTime = Date.now();//当前闭包创建的时间
+                renderStartTime = Date.now(); //当前闭包创建的时间
             self.renderStartTime = renderStartTime;
 
             function appendCode() {
