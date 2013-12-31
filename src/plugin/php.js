@@ -19,9 +19,9 @@ define(['prism'], function(Prism) {
 
     var CODE_SPLIT_REG = /((.*[\n|\u000d]){50}|[\s\S]+$)/g; //按50行一个代码块分割代码
 
-    var phpCodeHandler = function(container) {
+    var phpCodeHandler = function(options) {
         var self = this;
-        this.container = $(container);
+        this.container = $(options.container);
         this.container.html('<div class="code-wrapper"><pre class="language-php"><code class="language-php j-code"></code></pre><div class="control-wrapper word-wrap-control-wrapper"><label class="checkbox-inline"><input type="checkbox" class="j-word-wrap-control"/>Word Wrap</label></div></div>');
         this.codeContainer = this.container.find('.j-code');
         this.renderStartTime = 0;

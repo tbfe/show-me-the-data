@@ -52,6 +52,7 @@ body {
     -webkit-filter: blur(3px);
     filter: blur(3px);
 }
+
 /* style for php */
 .code[data-language=php] {
     flex: 1;
@@ -79,19 +80,22 @@ body {
     white-space: pre-wrap;
     word-break: break-all;
 }
+
+/* style for json */
+.code[data-language=json] .jsoneditor {
+    position: absolute;
+    border-width: 1px 0 0;
+}
+
 .control-wrapper {
     position: absolute;
-    top: 6px;
-    right: 22px;
-    background: rgba(0,0,0,.6);
-    border-radius: 3px;
     opacity: .4;
+    z-index: 99999;
 }
 .control-wrapper:hover {
     opacity: 1;
 }
-.word-wrap-control-wrapper {
-    position: absolute;
+.code[data-language=php] .control-wrapper {
     top: 6px;
     right: 22px;
     background: rgba(0,0,0,.6);
@@ -99,11 +103,16 @@ body {
     color: #ccc;
     padding-left: 20px; /* magic number */
 }
-.word-wrap-control-wrapper label{
+.code[data-language=php] .word-wrap-control-wrapper label{
     padding: 6px;
 }
-/* style for json */
-.code[data-language=json] .jsoneditor {
+.code[data-language=json] .control-wrapper {
+    top: 42px;
+    right: 22px;
+}
+.code[data-language=json] iframe[name=preview] {
     position: absolute;
-    border-width: 1px 0 0;
+    width: 100%;
+    height: 100%;
+    border: none;
 }

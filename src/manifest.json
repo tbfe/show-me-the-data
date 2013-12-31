@@ -8,7 +8,7 @@
         "default_title": "点击显示模版变量（双击新窗口打开）"
     },
     "background": {
-        "scripts": ["lib/uri.js","js/key.js","js/background.js"]
+        "scripts": ["lib/uri.js", "js/cache.js", "js/background.js"]
     },
     "icons": {
         "128": "image/icon_128.png",
