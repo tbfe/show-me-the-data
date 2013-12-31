@@ -1,4 +1,4 @@
-module.exports = function(grunt){
+module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: ['output'],
@@ -31,6 +31,9 @@ module.exports = function(grunt){
                     dest: 'output'
                 }]
             }
+        },
+        jshint: {
+            all: ['src/js/**/*.js', 'src/plugin/*.js']
         }
     });
 
@@ -38,6 +41,7 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
-    grunt.registerTask('default', ['clean', 'copy', 'uglify', 'cssmin']);
+    grunt.registerTask('default', ['jshint', 'clean', 'copy', 'uglify', 'cssmin']);
 };

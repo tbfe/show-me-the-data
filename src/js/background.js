@@ -4,7 +4,7 @@ function checkForValidUrl(tabId, changeInfo, tab) {
     if (tab.url.indexOf('baidu.com') > -1) {
         chrome.pageAction.show(tabId);
     }
-};
+}
 
 
 function showDataPage(tab) {
@@ -32,7 +32,7 @@ function showDataPageInNewTab(key, mix) {
         //传入的是tab
         url = mix.url;
     }
-    var url = new Uri(url);
+    url = new Uri(url);
     url.replaceQueryParam(PARAM_KEY, key);
     window.open(url.toString());
 }

@@ -84,7 +84,7 @@ define(['jsoneditor', 'ace', 'cache', 'uri'], function(jsoneditor, ace, cache, U
                     var actionUrl = new Uri(url);
                     actionUrl.replaceQueryParam(PARAM_KEY, key);
                     self.previewForm.attr('action', actionUrl.toString());
-                })
+                });
             }
             this.previewForm.find('input[name=__data]').val(JSON.stringify(data));
             this.previewForm[0].submit();

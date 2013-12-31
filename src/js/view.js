@@ -27,19 +27,19 @@ require(['cache', 'uri'], function(cache, Uri) {
         _codeHandler: undefined,
         renderCode: function(code) {
             cache.getKey(function(key) {
-                this._codeHandler && this._codeHandler.renderCode(code);
+                if (this._codeHandler) this._codeHandler.renderCode(code);
             });
         },
         initCodeHandler: function(language, callback) {
             var self = this;
             require(['/plugin/' + language + '.js'], function(codeHandler) {
-                self._codeHandler && self._codeHandler.destroy();
+                if (self._codeHandler) self._codeHandler.destroy();
                 self._codeHandler = new codeHandler({
                     container: '.j-code-wrapper',
                     url: currentUrl
                 });
                 $('.j-code-wrapper').attr('data-language', language);
-                callback && callback();
+                if (typeof callback === 'function') callback();
             });
         },
         fetchCode: function(url) {
@@ -51,7 +51,7 @@ require(['cache', 'uri'], function(cache, Uri) {
                 url.replaceQueryParam(LANGUAGE_KEY, cache.getLanguage());
                 var dataUrl = url.toString();
                 $.get(dataUrl, function(data) {
-                    self._codeHandler && self._codeHandler.renderCode(data);
+                    if (self._codeHandler) self._codeHandler.renderCode(data);
                     unloading();
                 });
             });
@@ -99,7 +99,7 @@ require(['cache', 'uri'], function(cache, Uri) {
             codeManager.initCodeHandler(targetLanguage, function() {
                 codeManager.fetchCode(currentUrl.toString());
             });
-        })
+        });
         //初始化关闭浮层
         function closeIframe() {
             window.parent.postMessage({
@@ -107,7 +107,7 @@ require(['cache', 'uri'], function(cache, Uri) {
                 code: 'close'
             }, '*');
         }
-        btnClose.click(closeIframe)
+        btnClose.click(closeIframe);
         $(document).keyup(function(e) {
             if (e.keyCode == 27) {
                 closeIframe();
@@ -122,7 +122,7 @@ require(['cache', 'uri'], function(cache, Uri) {
                 code: 'newtab'
             }, '*');
             btnNewWindow.attr('data-original-title', '下次试试双击 { }');
-        })
+        });
     })();
 });
 

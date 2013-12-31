@@ -8,7 +8,7 @@ var PARAM_KEY = '__qa',
     function _getKeyFromCache() {
         try {
             var value = localStorage.getItem(PARAM_KEY);
-            if (value == "") {
+            if (value === "") {
                 return false;
             } else {
                 var time = localStorage.getItem('time');
@@ -33,7 +33,7 @@ var PARAM_KEY = '__qa',
             var response = xhrpe.srcElement.response;
             localStorage.setItem(PARAM_KEY, response);
             localStorage.setItem('time', Date.now());
-            callback && callback(response);
+            if (typeof callback === 'function') callback(response);
         };
         xhr.open("GET", KEY_URL, true);
         xhr.send();

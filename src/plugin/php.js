@@ -5,7 +5,7 @@ define(['prism'], function(Prism) {
         return s.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/\u00a0/g, ' ');
-    };
+    }
 
     function clearTextNode(startNode) {
         if (!startNode) return;
@@ -85,6 +85,6 @@ define(['prism'], function(Prism) {
         clearCode: function() {
             this.codeContainer[0].innerHTML = '';
         }
-    }
+    };
     return phpCodeHandler;
 });
