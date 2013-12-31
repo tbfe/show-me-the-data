@@ -34,6 +34,19 @@ module.exports = function(grunt) {
         },
         jshint: {
             all: ['src/js/**/*.js', 'src/plugin/*.js']
+        },
+        'string-replace': {
+            dist: {
+                files: {
+                    'output/manifest.json': 'output/manifest.json'
+                },
+                options: {
+                    replacements: [{
+                        pattern: '0.0.0.0',
+                        replacement: '<%= grunt.template.today("yy.mm.dd") %>'
+                    }]
+                }
+            }
         }
     });
 
@@ -42,6 +55,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-string-replace');
 
-    grunt.registerTask('default', ['jshint', 'clean', 'copy', 'uglify', 'cssmin']);
+    grunt.registerTask('default', ['jshint', 'clean', 'copy', 'uglify', 'cssmin', 'string-replace']);
 };
