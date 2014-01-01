@@ -43,9 +43,21 @@ module.exports = function(grunt) {
                 options: {
                     replacements: [{
                         pattern: '0.0.0.0',
-                        replacement: '<%= grunt.template.today("yy.mm.dd") %>'
+                        replacement: '<%= grunt.template.today("yy.m.d") %>'
                     }]
                 }
+            }
+        },
+        compress: {
+            main: {
+                options: {
+                    archive: 'show-me-the-data.zip'
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'output',
+                    src: '**'
+                }]
             }
         }
     });
@@ -56,6 +68,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-string-replace');
+    grunt.loadNpmTasks('grunt-contrib-compress');
 
     grunt.registerTask('default', ['jshint', 'clean', 'copy', 'uglify', 'cssmin', 'string-replace']);
+    grunt.registerTask('release', function() {
+        grunt.task.run('default', 'compress');
+    });
 };
