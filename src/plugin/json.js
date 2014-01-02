@@ -1,7 +1,8 @@
-define(['jsoneditor', 'ace', 'cache', 'uri'], function(jsoneditor, ace, cache, Uri) {
+define(['jsoneditor', 'ace', 'cache', 'uri', 'FileSaver'], function(jsoneditor, ace, cache, Uri, saveAs) {
     loadCss('/plugin/dependence/jsoneditor/jsoneditor.css');
 
     var jsonCodeHandler = function(options) {
+        this.originalCode = '';
         // create the editor
         this.container = $(options.container);
         this.editor = new jsoneditor.JSONEditor(this.container[0], {
@@ -14,7 +15,7 @@ define(['jsoneditor', 'ace', 'cache', 'uri'], function(jsoneditor, ace, cache, U
             var self = this;
             this.modeController = $(
                 '<div class="control-wrapper">' +
-                '<div class="btn-group j-radio-view-mode" data-toggle="buttons">' +
+                '<div class="btn-group btn-group-sm j-radio-view-mode" data-toggle="buttons">' +
                 '<label class="btn btn-default" data-toggle="tooltip" title="编辑">' +
                 '<input type="radio" name="view-mode" value="edit"><span class="glyphicon glyphicon-edit"></span>' +
                 '</label>' +
@@ -25,16 +26,27 @@ define(['jsoneditor', 'ace', 'cache', 'uri'], function(jsoneditor, ace, cache, U
                 '<input type="radio" name="view-mode" value="preview"><span class="glyphicon glyphicon-play"></span>' +
                 '</label>' +
                 '</div>' +
+                '<div class="btn-group btn-group-sm">' +
+                '<button class="btn btn-default j-revert-all" data-toggle="tooltip" title="撤销所有更改"  type="button">' +
+                '<span class="glyphicon glyphicon-trash"></span>' +
+                '</button>' +
+                '<button class="btn btn-default j-export-json" data-toggle="tooltip" title="导出"  type="button">' +
+                '<span class="glyphicon glyphicon-save"></span>' +
+                '</button>' +
+                '<button class="btn btn-default j-import-json" data-toggle="tooltip" title="导入"  type="button">' +
+                '<span class="glyphicon glyphicon-folder-open"></span>' +
+                '</button>' +
+                '</div>' +
+                '<input type="file" class="j-file-upload" style="display:none"/>' +
                 '</div>');
             this.modeController.appendTo(this.container).button();
             this.modeController.find('.btn').tooltip({
                 container: 'body',
-                placement: 'bottom'
+                placement: 'top'
             });
-            this.modeController.find('input:radio').change(function(e) {
+            this.modeController.find('.j-radio-view-mode input:radio').change(function(e) {
                 var data = self.getValidJson();
                 if (data === false) {
-                    alert("JSON invalid.");
                     return;
                 }
                 var value = $(this).attr('value');
@@ -59,15 +71,55 @@ define(['jsoneditor', 'ace', 'cache', 'uri'], function(jsoneditor, ace, cache, U
                 }
             });
             self.setMode('edit');
+            //初始化撤销
+            this.modeController.on('click', '.j-revert-all', function() {
+                self._renderCode(self.originalCode);
+            });
+            //初始化导出导入json按钮
+            this.modeController.on('click', '.j-export-json', function() {
+                var json = self.getValidJson();
+                if (json === false) {
+                    return;
+                }
+                var blob = new Blob([JSON.stringify(json)], {
+                    type: 'text/plain'
+                });
+                saveAs(blob, url + '.' + new Date().toJSON() + '.json');
+            });
+            this.modeController.on('change', '.j-file-upload', function(e) {
+                var selectedFile = e.target.files[0];
+                var reader = new FileReader();
+                reader.onload = (function(file) {
+                    return function(e) {
+                        console.log(e.target.result);
+                        self._renderCode(e.target.result);
+                    };
+                })(selectedFile);
+                reader.readAsText(selectedFile);
+            });
+            this.modeController.on('click', '.j-import-json', function() {
+                self.modeController.find('.j-file-upload').trigger('click');
+            });
         },
         setMode: function(mode) {
             this.modeController.find('input[value=' + mode + ']').click();
+        },
+        setJson: function(json) {
+            var result;
+            try {
+                result = this.editor.set(JSON.parse(json));
+            } catch (e) {
+                alert('JSON invalid.');
+                return false;
+            }
+            return result;
         },
         getValidJson: function() {
             var __data;
             try {
                 __data = this.editor.get();
             } catch (e) {
+                alert("JSON invalid.");
                 return false;
             }
             return __data;
@@ -91,11 +143,15 @@ define(['jsoneditor', 'ace', 'cache', 'uri'], function(jsoneditor, ace, cache, U
             loading();
         },
         renderCode: function(code) {
+            this.originalCode = code;
+            this._renderCode(code);
+        },
+        _renderCode: function(code) {
             var mode = this.modeController.find('input:radio:checked').val();
             if (mode === 'preview') {
                 this.setMode('edit');
             }
-            this.editor.set(JSON.parse(code));
+            this.setJson(code);
         },
         destroy: function() {
             this.container.empty();

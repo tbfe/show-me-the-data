@@ -4,7 +4,8 @@ requirejs.config({
         uri: "/lib/uri",
         prism: "/plugin/dependence/prism/prism",
         ace: "/plugin/dependence/ace/ace",
-        jsoneditor: "/plugin/dependence/jsoneditor/jsoneditor"
+        jsoneditor: "/plugin/dependence/jsoneditor/jsoneditor",
+        FileSaver: "/plugin/dependence/FileSaver/FileSaver"
     },
     shim: {
         'prism': {
@@ -15,6 +16,9 @@ requirejs.config({
         },
         'uri': {
             'exports': 'Uri'
+        },
+        'FileSaver': {
+            'exports': 'saveAs'
         }
     }
 });
@@ -108,7 +112,7 @@ require(['cache', 'uri'], function(cache, Uri) {
             }, '*');
         }
         btnClose.click(closeIframe);
-        $(document).keyup(function(e) {
+        $(document).keypress(function(e) {
             if (e.keyCode == 27) {
                 closeIframe();
             }

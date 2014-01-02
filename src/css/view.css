@@ -89,6 +89,8 @@ body {
 
 .control-wrapper {
     position: absolute;
+    bottom: 6px;
+    right: 20px;
     opacity: .4;
     z-index: 99999;
 }
@@ -96,8 +98,6 @@ body {
     opacity: 1;
 }
 .code[data-language=php] .control-wrapper {
-    top: 6px;
-    right: 22px;
     background: rgba(0,0,0,.6);
     border-radius: 3px;
     color: #ccc;
@@ -106,9 +106,8 @@ body {
 .code[data-language=php] .word-wrap-control-wrapper label{
     padding: 6px;
 }
-.code[data-language=json] .control-wrapper {
-    top: 42px;
-    right: 22px;
+.code[data-language=json] .control-wrapper .btn-group {
+    margin-left: 6px;
 }
 .code[data-language=json] iframe[name=preview] {
     position: absolute;
