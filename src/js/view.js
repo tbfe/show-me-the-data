@@ -112,7 +112,8 @@ require(['cache', 'uri'], function(cache, Uri) {
             }, '*');
         }
         btnClose.click(closeIframe);
-        $(document).keypress(function(e) {
+        //keypress对escape不生效，keyup会在浏览器重新获得焦点后被触发
+        $(document).keydown(function(e) {
             if (e.keyCode == 27) {
                 closeIframe();
             }
