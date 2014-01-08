@@ -7,7 +7,7 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     cwd: 'src',
-                    src: '**',
+                    src: ['**', '!**/*.psd'],
                     dest: 'output'
                 }]
             }
