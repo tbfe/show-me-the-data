@@ -1,10 +1,10 @@
-var _timestamp;//上一次点击的时间
+var _timestamp; //上一次点击的时间
 
 function checkForValidUrl(tabId, changeInfo, tab) {
     if (tab.url.indexOf('baidu.com') > -1) {
         chrome.pageAction.show(tabId);
     }
-};
+}
 
 
 function showDataPage(tab) {
@@ -13,11 +13,13 @@ function showDataPage(tab) {
     };
     if (_timestamp > Date.now() - 500) {
         callback = function(key) {
-            chrome.tabs.executeScript(null, {code: "(new View()).hide()"});
+            chrome.tabs.executeScript(null, {
+                code: "(new View()).hide()"
+            });
             showDataPageInNewTab(key, tab);
         };
     }
-    getKey(callback);
+    Cache.getKey(callback);
     _timestamp = Date.now();
 }
 
@@ -26,29 +28,37 @@ function showDataPageInNewTab(key, mix) {
     if (mix === undefined) return;
     if (typeof mix === 'string') {
         url = mix;
-    }
-    else {
+    } else {
         //传入的是tab
         url = mix.url;
     }
-    var url = new Uri(url);
+    url = new Uri(url);
     url.replaceQueryParam(PARAM_KEY, key);
     window.open(url.toString());
 }
+
 function showDataPageIframe(tab) {
-    chrome.tabs.insertCSS(null, {file: "css/view_iframe.css"});
-    chrome.tabs.executeScript(null, {file: "js/view_iframe_init.js"}, function(){
-        chrome.tabs.executeScript(null, {code: "var view = new View('"+ tab.url +"');view.toggle();"});
+    chrome.tabs.insertCSS(null, {
+        file: "css/view_iframe.css"
+    });
+    chrome.tabs.executeScript(null, {
+        file: "js/view_iframe_init.js"
+    }, function() {
+        chrome.tabs.executeScript(null, {
+            code: "var view = new View('" + tab.url + "');view.toggle();"
+        });
     });
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch (request.code) {
         case 'close':
-            chrome.tabs.executeScript(null, {code: "(new View()).hide()"});
+            chrome.tabs.executeScript(null, {
+                code: "(new View()).hide()"
+            });
             break;
         case 'newtab':
-            getKey(function(key) {
+            Cache.getKey(function(key) {
                 showDataPageInNewTab(key, request.data.url);
             });
             break;

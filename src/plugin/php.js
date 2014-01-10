@@ -1,11 +1,11 @@
 define(['prism'], function(Prism) {
-    loadCss('/plugin/dependence/prism.css');
+    loadCss('/plugin/dependence/prism/prism.css');
 
     function escapeForPrism(s) {
         return s.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/\u00a0/g, ' ');
-    };
+    }
 
     function clearTextNode(startNode) {
         if (!startNode) return;
@@ -19,10 +19,10 @@ define(['prism'], function(Prism) {
 
     var CODE_SPLIT_REG = /((.*[\n|\u000d]){50}|[\s\S]+$)/g; //按50行一个代码块分割代码
 
-    var phpCodeHandler = function(container) {
+    var phpCodeHandler = function(options) {
         var self = this;
-        this.container = $(container);
-        this.container.html('<div class="code-wrapper"><pre class="language-php"><code class="language-php j-code"></code></pre><div class="word-wrap-control-wrapper"><label class="checkbox-inline"><input type="checkbox" class="j-word-wrap-control"/>Word Wrap</label></div></div>');
+        this.container = $(options.container);
+        this.container.html('<div class="code-wrapper"><pre class="language-php"><code class="language-php j-code"></code></pre><div class="control-wrapper word-wrap-control-wrapper"><label class="checkbox-inline"><input type="checkbox" class="j-word-wrap-control"/>Word Wrap</label></div></div>');
         this.codeContainer = this.container.find('.j-code');
         this.renderStartTime = 0;
 
@@ -39,7 +39,7 @@ define(['prism'], function(Prism) {
             var codeArray = code.match(CODE_SPLIT_REG);
 
             var timeout, i = 0,
-                renderStartTime = Date.now();//当前闭包创建的时间
+                renderStartTime = Date.now(); //当前闭包创建的时间
             self.renderStartTime = renderStartTime;
 
             function appendCode() {
@@ -85,6 +85,6 @@ define(['prism'], function(Prism) {
         clearCode: function() {
             this.codeContainer[0].innerHTML = '';
         }
-    }
+    };
     return phpCodeHandler;
 });

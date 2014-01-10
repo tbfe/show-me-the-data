@@ -1,6 +1,6 @@
 {
     "name": "Show Me The DATA",
-    "version": "13.11.1",
+    "version": "0.0.0.0",
     "description": "快速获取模版变量",
     "permissions": ["http://*.baidu.com/", "tabs"],
     "page_action": {
@@ -8,7 +8,7 @@
         "default_title": "点击显示模版变量（双击新窗口打开）"
     },
     "background": {
-        "scripts": ["lib/uri.js","js/key.js","js/background.js"]
+        "scripts": ["lib/uri.js", "js/cache.js", "js/background.js"]
     },
     "icons": {
         "128": "image/icon_128.png",
