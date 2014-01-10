@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        clean: ['output'],
+        clean: ['output', '*.zip'],
         copy: {
             dist: {
                 files: [{
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         compress: {
             main: {
                 options: {
-                    archive: 'show-me-the-data.zip'
+                    archive: 'show-me-the-data-<%= grunt.template.today("yy.m.d") %>.zip'
                 },
                 files: [{
                     expand: true,
