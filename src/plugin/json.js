@@ -106,8 +106,11 @@ define(['jsoneditor', 'ace', 'cache', 'uri', 'FileSaver'], function(jsoneditor, 
         },
         setJson: function(json) {
             var result;
+            if (typeof json === 'string') {
+                json = JSON.parse(json);
+            }
             try {
-                result = this.editor.set(JSON.parse(json));
+                result = this.editor.set(json);
             } catch (e) {
                 alert('JSON invalid.');
                 return false;

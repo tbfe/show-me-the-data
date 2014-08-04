@@ -57,7 +57,7 @@ require(['cache', 'uri'], function(cache, Uri) {
                 $.get(dataUrl, function(data) {
                     if (self._codeHandler) self._codeHandler.renderCode(data);
                     unloading();
-                });
+                }, 'text');
             });
         }
     };
