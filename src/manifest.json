@@ -2,7 +2,7 @@
     "name": "Show Me The DATA",
     "version": "0.0.0.0",
     "description": "快速获取模版变量",
-    "permissions": ["http://*.baidu.com/", "tabs"],
+    "permissions": ["http://*.baidu.com/", "tabs", "https://*.baidu.com/"],
     "page_action": {
         "default_icon": "image/icon.png",
         "default_title": "点击显示模版变量（双击新窗口打开）"
