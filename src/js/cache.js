@@ -2,8 +2,8 @@ var PARAM_KEY = '__qa',
     LANGUAGE_KEY = '__type';
 
 (function() {
-    var KEY_URL = 'http://cp01-tieba-ftp00.cp01.baidu.com:8080/tbtool/ajax/key.php';
-    // var KEY_URL = 'http://shishaokun.fe.baidu.com/tbtool/showmethedata/key.php';
+    // var KEY_URL = 'http://cp01-tieba-ftp00.cp01.baidu.com:8080/tbtool/ajax/key.php';
+    var KEY_URL = 'http://shishaokun.fe.baidu.com/tbtool/showmethedata/key.php';
 
     function _getKeyFromCache() {
         try {
